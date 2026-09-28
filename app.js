@@ -2,6 +2,7 @@
 
 const STORAGE_KEY = "python-flex-studio-lessons-v1";
 const LIFF_STORAGE_KEY = "python-flex-studio-liff-id";
+const DEFAULT_LIFF_ID = "2011771258-REkhfekt";
 
 const defaultLessons = [
   {
@@ -375,7 +376,7 @@ function validateForShare() {
 }
 
 async function initializeLiff() {
-  const liffId = localStorage.getItem(LIFF_STORAGE_KEY)?.trim();
+  const liffId = localStorage.getItem(LIFF_STORAGE_KEY)?.trim() || DEFAULT_LIFF_ID;
   elements.liffIdInput.value = liffId || "";
 
   if (!liffId) {
