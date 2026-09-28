@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="編輯、預覽並透過 LINE Share Target Picker 分享 Python 課程 Flex Message。"
+    />
+    <meta name="theme-color" content="#0b1612" />
+    <title>Python Flex Studio</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%2306c755'/%3E%3Cpath d='M18 16h18a8 8 0 0 1 8 8v8H27a9 9 0 0 0-9 9V16Z' fill='%23fff'/%3E%3Ccircle cx='36' cy='23' r='2.3' fill='%230b1612'/%3E%3Cpath d='M46 48H28a8 8 0 0 1-8-8v-8h17a9 9 0 0 0 9-9v25Z' fill='%23d8ff67'/%3E%3Ccircle cx='28' cy='41' r='2.3' fill='%230b1612'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&amp;family=Noto+Sans+TC:wght@400;500;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand" aria-label="Python Flex Studio">
+        <span class="brand-mark" aria-hidden="true">Py</span>
+        <span>
+          <strong>Python Flex Studio</strong>
+          <small>LINE 課程卡片編輯器</small>
+        </span>
+      </div>
+
+      <div class="header-actions">
+        <span class="save-state" id="saveState" aria-live="polite">已儲存在此裝置</span>
+        <button class="button button-ghost" id="openJsonButton" type="button">
+          查看 JSON
+        </button>
+        <button class="button button-line" id="shareButton" type="button">
+          <span class="button-icon" aria-hidden="true">↗</span>
+          分享到 LINE
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="lesson-panel" aria-labelledby="lessonListTitle">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">COURSE OUTLINE</p>
+            <h1 id="lessonListTitle">10 堂 Python 入門課</h1>
+          </div>
+          <span class="count-badge">10</span>
+        </div>
+        <nav class="lesson-list" id="lessonList" aria-label="課程清單"></nav>
+
+        <div class="connection-card">
+          <div class="connection-title">
+            <span class="status-dot" id="connectionDot" aria-hidden="true"></span>
+            <strong id="connectionTitle">尚未連接 LIFF</strong>
+          </div>
+          <p id="connectionMessage">設定 LIFF ID 後即可分享卡片。</p>
+          <button class="text-button" id="openSettingsButton" type="button">
+            LIFF 設定 <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </aside>
+
+      <section class="editor-panel" aria-labelledby="editorTitle">
+        <div class="editor-scroll">
+          <div class="panel-heading editor-heading">
+            <div>
+              <p class="eyebrow" id="lessonNumber">LESSON 01</p>
+              <h2 id="editorTitle">編輯課程卡片</h2>
+            </div>
+            <span class="keyboard-hint">即時儲存</span>
+          </div>
+
+          <form id="lessonForm" novalidate>
+            <label class="field">
+              <span class="field-label">課程標題</span>
+              <input
+                id="titleInput"
+                name="title"
+                type="text"
+                maxlength="80"
+                autocomplete="off"
+              />
+              <span class="field-meta"><span id="titleCount">0</span>/80</span>
+            </label>
+
+            <label class="field">
+              <span class="field-label">課程說明</span>
+              <textarea
+                id="descriptionInput"
+                name="description"
+                rows="5"
+                maxlength="240"
+              ></textarea>
+              <span class="field-meta"><span id="descriptionCount">0</span>/240</span>
+            </label>
+
+            <div class="field-row">
+              <label class="field">
+                <span class="field-label">按鈕文字</span>
+                <input
+                  id="buttonTextInput"
+                  name="buttonText"
+                  type="text"
+                  maxlength="40"
+                  autocomplete="off"
+                />
+              </label>
+
+              <label class="field color-field">
+                <span class="field-label">主題色</span>
+                <span class="color-control">
+                  <input id="colorInput" name="color" type="color" />
+                  <output id="colorValue" for="colorInput">#06C755</output>
+                </span>
+              </label>
+            </div>
+
+            <label class="field">
+              <span class="field-label">課程網址</span>
+              <input
+                id="urlInput"
+                name="url"
+                type="url"
+                inputmode="url"
+                placeholder="https://example.com/lesson-1"
+                autocomplete="url"
+              />
+              <span class="field-help">Flex 按鈕只會接受 http 或 https 網址。</span>
+            </label>
+          </form>
+
+          <div class="editor-footer">
+            <button class="text-button danger" id="resetButton" type="button">
+              還原預設課程
+            </button>
+            <div class="step-actions">
+              <button class="icon-button" id="previousButton" type="button" aria-label="上一堂課">
+                ←
+              </button>
+              <button class="icon-button" id="nextButton" type="button" aria-label="下一堂課">
+                →
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="preview-panel" aria-labelledby="previewTitle">
+        <div class="panel-heading preview-heading">
+          <div>
+            <p class="eyebrow">LIVE PREVIEW</p>
+            <h2 id="previewTitle">LINE 顯示預覽</h2>
+          </div>
+          <span class="preview-note">近似畫面</span>
+        </div>
+
+        <div class="phone-stage">
+          <div class="phone-shell">
+            <div class="phone-status" aria-hidden="true">
+              <span>9:41</span>
+              <span class="phone-island"></span>
+              <span>5G&nbsp; ◉</span>
+            </div>
+            <div class="line-header">
+              <span aria-hidden="true">‹</span>
+              <strong>Python 學習室</strong>
+              <span aria-hidden="true">☰</span>
+            </div>
+            <div class="chat-area">
+              <div class="message-meta">Flex 課程選單</div>
+              <div class="carousel-viewport" id="previewCarousel" aria-label="Flex 卡片預覽"></div>
+              <div class="carousel-dots" id="previewDots" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+
+        <p class="preview-disclaimer">
+          最終字型、間距與換行方式以 LINE App 實際顯示為準。
+        </p>
+      </section>
+    </main>
+
+    <dialog class="dialog" id="settingsDialog" aria-labelledby="settingsTitle">
+      <form method="dialog" class="dialog-card" id="settingsForm">
+        <div class="dialog-header">
+          <div>
+            <p class="eyebrow">LINE CONNECTION</p>
+            <h2 id="settingsTitle">LIFF 設定</h2>
+          </div>
+          <button class="close-button" data-close-settings type="button" aria-label="關閉設定">×</button>
+        </div>
+        <label class="field">
+          <span class="field-label">LIFF ID</span>
+          <input
+            id="liffIdInput"
+            type="text"
+            placeholder="2001234567-AbCdEfGh"
+            autocomplete="off"
+          />
+          <span class="field-help">
+            請貼上 LINE Developers Console 內的 LIFF ID。這不是 Channel Secret。
+          </span>
+        </label>
+        <div class="setup-steps">
+          <span>1. 建立 LINE Login Channel</span>
+          <span>2. 新增 LIFF App</span>
+          <span>3. 啟用 Share Target Picker</span>
+        </div>
+        <div class="dialog-actions">
+          <button class="button button-ghost" data-close-settings type="button">取消</button>
+          <button class="button button-line" id="saveSettingsButton" value="default">
+            儲存並重新載入
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="dialog dialog-wide" id="jsonDialog" aria-labelledby="jsonTitle">
+      <form method="dialog" class="dialog-card json-dialog-card" id="jsonForm">
+        <div class="dialog-header">
+          <div>
+            <p class="eyebrow">FLEX MESSAGE</p>
+            <h2 id="jsonTitle">Flex JSON</h2>
+          </div>
+          <button class="close-button" value="cancel" aria-label="關閉 JSON 視窗">×</button>
+        </div>
+        <p class="dialog-copy">
+          可直接修改 JSON，再按「套用 JSON」同步回編輯器與預覽。
+        </p>
+        <textarea
+          class="json-editor"
+          id="jsonEditor"
+          spellcheck="false"
+          aria-label="Flex JSON 編輯器"
+        ></textarea>
+        <p class="json-error" id="jsonError" role="alert"></p>
+        <div class="dialog-actions json-actions">
+          <button class="button button-ghost" id="copyJsonButton" type="button">複製</button>
+          <button class="button button-ghost" id="downloadJsonButton" type="button">下載</button>
+          <button class="button button-dark" id="applyJsonButton" type="button">套用 JSON</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
